@@ -1,10 +1,14 @@
 package com.example.textapp;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class MyService extends Service {
@@ -38,6 +42,21 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "onCreate: 服务创建了！");
+        Intent intent = new Intent(this,MyService.class);
+        PendingIntent pendingIntent = PendingIntent.getActivities(this,0, new Intent[]{intent},0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("这是标题")
+                .setContentText("这是正文")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+
+        //设置后让服务变成前台服务
+        startForeground(1,notification);
+
     }
 
     /**
